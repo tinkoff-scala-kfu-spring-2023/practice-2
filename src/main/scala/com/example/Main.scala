@@ -1,33 +1,37 @@
 package com.example
 
-import scala.annotation.tailrec
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val commands: Array[Command] = Array(
-      Load(Goods(500)),
-      Move("North", 100),
-      Move("South", 1000),
-      Unload(300),
-      Move("West", 300),
-      Unload(200)
-    )
-    val robot = Robot(None, Array())
-    val result = runCommands(robot, commands)
+    val input = io.Source.fromFile(args(0))
+    val commands = input.getLines().map { line =>
+      val splitted = line.split(";")
+      splitted.headOption.map {
+        case "move"   => Move(splitted(1), splitted(2).toInt)
+        case "load"   => Load(Goods(splitted(1).toInt, splitted(2).toInt))
+        case "unload" => Unload(Goods(splitted(1).toInt, splitted(2).toInt))
+      }.get
+    }
+    val robot = Robot(Array(), Array())
+    val result = runCommands(robot, commands.toArray)
     result.madeMoves.foreach(println)
   }
 
   def runCommands(robot: Robot, commands: Array[Command]): Robot = {
-    if (commands.isEmpty) robot else commands.head match {
-      case Load(goods) => runCommands(robot.load(goods), commands.tail)
-      case Unload(mass) => runCommands(robot.unload(mass), commands.tail)
-      case Move(direction, length) => runCommands(robot.go(direction, length), commands.tail)
-    }
+    if (commands.isEmpty)
+      robot
+    else
+      commands.head match {
+        case Load(goods)   => runCommands(robot.load(goods), commands.tail)
+        case Unload(goods) => runCommands(robot.unload(goods), commands.tail)
+        case Move(direction, length) =>
+          runCommands(robot.go(direction, length), commands.tail)
+      }
   }
 }
 
 trait Command
 
 case class Load(goods: Goods) extends Command
-case class Unload(mass: Int) extends Command
-case class Move(direction: String, length: Int) extends Command
+case class Unload(goods: Goods) extends Command
+case class Move(direction: String, distance: Int) extends Command

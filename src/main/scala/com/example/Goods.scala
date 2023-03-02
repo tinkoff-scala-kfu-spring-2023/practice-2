@@ -1,3 +1,3 @@
 package com.example
 
-case class Goods(mass: Int)
+case class Goods(productId: Int, mass: Int)

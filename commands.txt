@@ -1,0 +1,12 @@
+load;1;900
+move;north;300
+move;west;400
+move;south;100
+load;2;100
+move;west;150
+move;south;150
+unload;1;500
+move;north;500
+move;east;400
+unload;1;400
+unload;2;100
