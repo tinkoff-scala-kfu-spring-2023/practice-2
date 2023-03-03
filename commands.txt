@@ -1,9 +1,9 @@
-load;1;900
+load;1;900длд
 move;north;300
 move;west;400
 move;south;100
 load;2;100
-move;west;150
+move;west;150фыва
 move;south;150
 unload;1;500
 move;north;500
